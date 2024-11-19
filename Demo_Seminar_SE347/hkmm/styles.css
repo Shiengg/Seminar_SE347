@@ -8,6 +8,17 @@
     100% { transform: translateY(100vh) rotate(360deg); }
 }
 
+@keyframes modalFadeIn {
+    0% { 
+        opacity: 0; 
+        transform: translate(-50%, -40%) scale(0.95);
+    }
+    100% { 
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
 .firework {
     position: absolute;
     width: 4px;
@@ -34,21 +45,31 @@
     filter: grayscale(0);
 }
 
-#teacher-gallery {
-    position: relative;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px 0;
+#wishModal {
+    display: none;
 }
 
-#teacher-gallery::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
-    left: 30px;
+#wishModal.show {
+    display: flex;
+}
+
+.modal-content {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transition: all 0.3s ease-out;
+}
+
+#wishModal.show .modal-content {
+    animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+.timeline-item {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 1s ease-out forwards;
 }
 
 @keyframes fadeIn {
@@ -56,6 +77,10 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
-    animation: fadeIn 1s ease-out;
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .modal-content {
+        width: 90%;
+        margin: 0 auto;
+    }
 }

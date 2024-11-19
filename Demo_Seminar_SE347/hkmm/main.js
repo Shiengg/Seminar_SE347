@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     const wishButton = document.getElementById('wishButton');
+    const wishModal = document.getElementById('wishModal');
+    const closeModal = document.getElementById('closeModal');
+    const wishMessage = document.getElementById('wishMessage');
     const fireworksContainer = document.getElementById('fireworks-container');
     const roseContainer = document.getElementById('rose-container');
-    const teacherGallery = document.getElementById('teacher-gallery');
     
     const messages = [
-        "Kính chúc cô ngày 20/11 luôn mạnh khoẻ và hạnh phúc",
-    
+        "Cảm ơn cô đã luôn tận tâm dạy dỗ chúng em!, Chúc mừng ngày Nhà giáo Việt Nam 20/11! Kính chúc cô luôn mạnh khỏe và hạnh phúc!",
     ];
 
     const teacherImages = [
@@ -53,73 +54,59 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10000);
     }
 
-    // Hiệu ứng pháo hoa và hoa hồng
-    setInterval(createFirework, 1000);
-    setInterval(createRose, 2000);
+    let fireworkInterval;
+
+    // Xử lý modal
+    wishButton.addEventListener('click', function() {
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        wishMessage.textContent = randomMessage;
+        wishModal.classList.remove('hidden');
+        wishModal.classList.add('show');
+        
+        // Tăng tốc độ pháo hoa khi mở modal
+        if (fireworkInterval) clearInterval(fireworkInterval);
+        fireworkInterval = setInterval(() => {
+            for (let i = 0; i < 3; i++) {
+                createFirework();
+            }
+        }, 300);
+    });
+
+    function closeModalHandler() {
+        wishModal.classList.remove('show');
+        wishModal.classList.add('hidden');
+        if (fireworkInterval) {
+            clearInterval(fireworkInterval);
+        }
+    }
+
+    closeModal.addEventListener('click', closeModalHandler);
+
+    // Đóng modal khi click bên ngoài
+    wishModal.addEventListener('click', function(e) {
+        if (e.target === wishModal) {
+            closeModalHandler();
+        }
+    });
+
+    // Đóng modal khi nhấn ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && wishModal.classList.contains('show')) {
+            closeModalHandler();
+        }
+    });
 
     // Tạo gallery giáo viên
+    const teacherGallery = document.getElementById('teacher-gallery');
     teacherImages.forEach(src => {
         const img = document.createElement('img');
         img.src = src;
         img.alt = 'Teacher Avatar';
-        img.classList.add('w-24', 'h-24', 'rounded-full', 'object-cover', 'transform', 'hover:scale-110', 'transition', 'duration-300');
+        img.classList.add('w-24', 'h-24', 'rounded-full', 'object-cover', 'transform', 'hover:scale-110', 'transition', 'duration-300', 'mx-auto');
         teacherGallery.appendChild(img);
     });
 
-    wishButton.addEventListener('click', function() {
-        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-        alert(randomMessage);
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const teacherMemories = [
-        {
-            year: 1990,
-            image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=teacher1',
-            description: 'Cô Linh - Giáo viên Toán đầy nhiệt huyết'
-        },
-        {
-            year: 2000,
-            image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=teacher2', 
-            description: 'Thầy Minh - Người thắp sáng đam mê khoa học'
-        },
-        {
-            year: 2010,
-            image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=teacher3',
-            description: 'Cô Hương - Tấm gương sáng về sự tận tâm'
-        },
-        {
-            year: 2020,
-            image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=teacher4',
-            description: 'Thầy Tuấn - Nhà giáo truyền cảm hứng'
-        }
-    ];
-
-    const timelineContainer = document.getElementById('teacher-gallery');
-
-    teacherMemories.forEach((memory, index) => {
-        const timelineItem = document.createElement('div');
-        timelineItem.classList.add(
-            'timeline-item', 
-            'relative', 
-            'flex', 
-            'items-center', 
-            'mb-8', 
-            'animate-fade-in'
-        );
-
-        timelineItem.innerHTML = `
-            <div class="timeline-marker absolute w-6 h-6 bg-blue-500 rounded-full -left-3 z-10"></div>
-            <div class="timeline-content flex items-center bg-white shadow-lg rounded-xl p-4 transform transition hover:scale-105">
-                <img src="${memory.image}" alt="Teacher" class="w-24 h-24 rounded-full mr-6 object-cover">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-800">${memory.year}</h3>
-                    <p class="text-gray-600">${memory.description}</p>
-                </div>
-            </div>
-        `;
-
-        timelineContainer.appendChild(timelineItem);
-    });
+    // Background effects
+    setInterval(createFirework, 2000);
+    setInterval(createRose, 3000);
 });
